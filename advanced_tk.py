@@ -1,4 +1,5 @@
 from tkinter import *
+import json
 
 ####################################################################################################################
 # todo SO I DID THE HORIZONTAL CALCULATION OF THE AVERAGE OF EACH SUBJECT, NOW, YOU SHOULD DO THE VERTICAL ONE, AND#
@@ -8,6 +9,7 @@ from tkinter import *
 
 def advanced():
     window = Tk()
+    window.title("Marks Calculator")
 
     titles = ["Subjects", "Exam N°1", "Exam N°2", "Exam N°3", "Exam N°4", "Activities", "Average"]
     for num, i in enumerate(titles):
@@ -122,15 +124,39 @@ def advanced():
         subjects['Average'][-1].delete(0, END)
         subjects['Average'][-1].insert(INSERT, "%.2f" % average)
 
+
     def clear():
         for i in subjects:
             for entry in subjects[i]:
                 entry.delete(0, END)
 
+    def save_data():
+        display_average()
+        with open("subject_grades.json", 'w') as f:
+            json.dump(subject_grades, f)
+
+    def import_data():
+        with open("subject_grades.json", 'r') as f:
+            json_load = json.load(f)
+            if json_load != {}:
+                subject_grades = json_load
+
+                for i in subjects:
+                    for j in range(5):
+                        ent = subjects[i][j]
+                        ent.delete(0, END)
+                        ent.insert(INSERT, subject_grades[i][j])
+        display_average()
+
+    # All buttons
     average_btn = Button(window, text="DISPLAY AVERAGE", command=display_average)
     clear_btn = Button(window, text="CLEAR", command=clear)
+    save_btn = Button(window, text="SAVE", command=save_data)
+    import_btn = Button(window, text="IMPORT", command=import_data)
     average_btn.grid(row=len(subjects)//2-1, column=7)
     clear_btn.grid(row=len(subjects)//2+1, column=7)
+    save_btn.grid(row=0, column=7)
+    import_btn.grid(row=1, column=7)
 
     window.mainloop()
 
