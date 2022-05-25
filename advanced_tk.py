@@ -72,7 +72,7 @@ def advanced():
                 if j == '':
                     length -= 1
 
-            # Sees if the activities field was fulled or not
+            # Sees if the activities field was filled or not
             if not isinstance(activities_grade, str):
                 sum_grades = sum([float(i) for i in grades_list[:length]])
                 average = (sum_grades/length)*0.75 + activities_grade*0.25
@@ -112,13 +112,33 @@ def advanced():
             subject_grades['Average'][i] = average
 
         # Calculate the final big grade
-        sum_grades = length = 0
-        for i in subject_grades['Average'][:4]:
-            # No need for the coefficients here bcs we are now calculating it horizontally
-            sum_grades += float(i)
-            if i != 0:
-                length += 1
-        average = sum_grades/length
+        copy_subject_grades = {i: subject_grades[i] for i in subject_grades}
+        for sub in copy_subject_grades:
+            lst = copy_subject_grades[sub][:-1]
+            for num, grade_str in enumerate(lst):
+                try:
+                    lst[num] = float(copy_subject_grades[sub][num])
+                except ValueError:
+                    lst[num] = None
+            for i in range(lst.count(None)):
+                lst.pop(lst.index(None))
+
+            copy_subject_grades[sub] = lst[:]
+        
+        average_lst = []
+        sum_coeff = 0
+        del copy_subject_grades["Average"]
+        for sub in copy_subject_grades:
+            for grade in copy_subject_grades[sub]:
+                if sub == "MATH" or sub == "PC" or sub == "SVT":
+                    coeff = 4
+                elif sub == "FR" or sub == "ANG":
+                    coeff = 3
+                else:
+                    coeff = 2
+                sum_coeff += coeff
+                average_lst.append(coeff * grade)
+        average = sum(average_lst) / sum_coeff
 
         subject_grades['Average'][-1] = average
         subjects['Average'][-1].delete(0, END)
