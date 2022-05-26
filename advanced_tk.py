@@ -120,6 +120,13 @@ def advanced():
                     lst[num] = float(copy_subject_grades[sub][num])
                 except ValueError:
                     lst[num] = None
+            # Count the activities grade properly
+            if lst[-1] is not None:
+                for num, i in enumerate(lst[:-1]):
+                    if i is not None:
+                        lst[num] = i * 0.75 + lst[-1] * 0.25
+                lst = lst[:-1]
+                
             for i in range(lst.count(None)):
                 lst.pop(lst.index(None))
 
