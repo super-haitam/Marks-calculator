@@ -36,14 +36,19 @@ def advanced():
             subjects[i].append(ent)
             ent.grid(row=num+1, column=j, padx=2)
 
+    # Get coefficient from subject
+    def get_coefficient(subject: str) -> int:
+        if subject == "MATH" or subject == "PC" or subject == "SVT":
+            return 4
+        elif subject == "FR" or subject == "ANG":
+            return 3
+        else:
+            return 2
+
     coefficient_list = []
     for i in subjects:
-        if i == "MATH" or i == "PC" or i == "SVT":
-            coefficient_list.append(4)
-        elif i == "FR" or i == "ANG":
-            coefficient_list.append(3)
-        elif i != "Average":
-            coefficient_list.append(2)
+        if i != "Average":
+            coefficient_list.append(get_coefficient(i))
 
     subject_grades = {}
 
@@ -137,12 +142,7 @@ def advanced():
         del copy_subject_grades["Average"]
         for sub in copy_subject_grades:
             for grade in copy_subject_grades[sub]:
-                if sub == "MATH" or sub == "PC" or sub == "SVT":
-                    coeff = 4
-                elif sub == "FR" or sub == "ANG":
-                    coeff = 3
-                else:
-                    coeff = 2
+                coeff = get_coefficient(sub)
                 sum_coeff += coeff
                 average_lst.append(coeff * grade)
         average = sum(average_lst) / sum_coeff
