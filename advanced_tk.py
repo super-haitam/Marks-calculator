@@ -117,35 +117,16 @@ def advanced():
             subject_grades['Average'][i] = average
 
         # Calculate the final big grade
-        copy_subject_grades = {i: subject_grades[i] for i in subject_grades}
-        for sub in copy_subject_grades:
-            lst = copy_subject_grades[sub][:-1]
-            for num, grade_str in enumerate(lst):
-                try:
-                    lst[num] = float(copy_subject_grades[sub][num])
-                except ValueError:
-                    lst[num] = None
-            # Count the activities grade properly
-            if lst[-1] is not None:
-                for num, i in enumerate(lst[:-1]):
-                    if i is not None:
-                        lst[num] = i * 0.75 + lst[-1] * 0.25
-                lst = lst[:-1]
-                
-            for i in range(lst.count(None)):
-                lst.pop(lst.index(None))
+        sum_coeff = sum_grades = 0
+        for subject in subjects:
+            if subject != 'Average':
+                av = float(subjects[subject][-1].get())
+                if av:
+                    coefficient = get_coefficient(subject)
+                    sum_coeff += coefficient
+                    sum_grades += av * coefficient
 
-            copy_subject_grades[sub] = lst[:]
-        
-        average_lst = []
-        sum_coeff = 0
-        del copy_subject_grades["Average"]
-        for sub in copy_subject_grades:
-            for grade in copy_subject_grades[sub]:
-                coeff = get_coefficient(sub)
-                sum_coeff += coeff
-                average_lst.append(coeff * grade)
-        average = sum(average_lst) / sum_coeff
+        average = sum_grades / sum_coeff
 
         subject_grades['Average'][-1] = average
         subjects['Average'][-1].delete(0, END)
