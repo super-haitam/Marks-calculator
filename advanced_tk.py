@@ -1,11 +1,20 @@
 from tkinter import *
 import json
 
-####################################################################################################################
-# todo SO I DID THE HORIZONTAL CALCULATION OF THE AVERAGE OF EACH SUBJECT, NOW, YOU SHOULD DO THE VERTICAL ONE, AND#
-# todo [...] IN THIS STEP, YOU SHOULD TAKE IN CONSIDERATION THE COEFFICIENTS; GOOD LUCK!!!                         #
-####################################################################################################################
-
+# Get coefficient from subject
+def get_coefficient(subject: str) -> int:
+    if subject == "MATH":
+        return 9
+    elif subject == "PC":
+        return 7
+    elif subject == "FR":
+        return 4
+    elif subject == "SVT":
+        return 3
+    elif subject in ["AR", "EI", "HG", "PH", "ANG", "TR"]:
+        return 2
+    elif subject == "EPS":
+        return 1
 
 def advanced():
     window = Tk()
@@ -18,7 +27,6 @@ def advanced():
     subjects = {
                 'EPS': [],
                 'HG': [],
-                'INF': [],
                 'EI': [],
                 'ANG': [],
                 'AR': [],
@@ -27,23 +35,22 @@ def advanced():
                 'PH': [],
                 'PC': [],
                 'SVT': [],
+                'TR': [],
                 'Average': []
                 }
+
+    # Print the coefficients
+    print("Subject\t:\tCoefficient")
+    for subj in subjects:
+        if subj != "Average":
+            print(subj, "\t:\t", get_coefficient(subj))
+
     for num, i in enumerate(subjects):
         Label(window, text=i).grid(row=num+1, column=0, pady=2)
         for j in range(1, 7):
             ent = Entry(window)
             subjects[i].append(ent)
             ent.grid(row=num+1, column=j, padx=2)
-
-    # Get coefficient from subject
-    def get_coefficient(subject: str) -> int:
-        if subject == "MATH" or subject == "PC" or subject == "SVT":
-            return 4
-        elif subject == "FR" or subject == "ANG":
-            return 3
-        else:
-            return 2
 
     coefficient_list = []
     for i in subjects:
